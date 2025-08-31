@@ -666,5 +666,506 @@ document.addEventListener('DOMContentLoaded', function() {
 
 //https://www.youtube.com/watch?v=UkB-zKNBVTo&list=PLv1CRNciwsrf_DA7Yl3_kdsqYjbjbMB8r&index=3
 
+// ======= NIM GAME LOGIC =======
+class NimGame {
+    constructor() {
+        this.piles = [];
+        this.currentPlayer = 'user'; // 'user' or 'computer'
+        this.gameOver = false;
+        this.moveHistory = [];
+        this.score = { player: 0, computer: 0 };
+        this.difficulty = 'normal'; // 'easy', 'normal', 'hard'
+        this.soundEnabled = true;
+        this.initializeGame();
+        this.setupKeyboardControls();
+    }
+
+    initializeGame() {
+        // Create 5 piles with random stones (1-10 each)
+        this.piles = [];
+        for (let i = 0; i < 5; i++) {
+            this.piles.push(Math.floor(Math.random() * 10) + 1);
+        }
+        this.currentPlayer = 'user';
+        this.gameOver = false;
+        this.moveHistory = [];
+        this.renderGame();
+        this.updateStatus('YOUR TURN');
+        this.logMove('⚡ BATTLE INITIATED! Click stones to begin your assault!');
+        this.addSparkleEffect();
+    }
+
+    setupKeyboardControls() {
+        document.addEventListener('keydown', (e) => {
+            if (this.gameOver) return;
+            
+            // Space bar to reset game
+            if (e.code === 'Space') {
+                e.preventDefault();
+                this.resetGame();
+            }
+            
+            // Number keys 1-5 to select piles
+            if (e.code >= 'Digit1' && e.code <= 'Digit5') {
+                const pileIndex = parseInt(e.code.slice(-1)) - 1;
+                if (this.piles[pileIndex] > 0) {
+                    this.highlightPile(pileIndex);
+                }
+            }
+        });
+    }
+
+    highlightPile(pileIndex) {
+        const piles = document.querySelectorAll('.pile');
+        piles.forEach((pile, index) => {
+            pile.classList.remove('pile-highlight');
+            if (index === pileIndex) {
+                pile.classList.add('pile-highlight');
+                setTimeout(() => pile.classList.remove('pile-highlight'), 1000);
+            }
+        });
+    }
+
+    addSparkleEffect() {
+        const gameBoard = document.getElementById('gameBoard');
+        if (!gameBoard) return;
+
+        for (let i = 0; i < 5; i++) {
+            setTimeout(() => {
+                this.createSparkle(gameBoard);
+            }, i * 200);
+        }
+    }
+
+    createSparkle(container) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = Math.random() * 100 + '%';
+        sparkle.style.top = Math.random() * 100 + '%';
+        container.appendChild(sparkle);
+        
+        setTimeout(() => {
+            if (sparkle.parentNode) {
+                sparkle.remove();
+            }
+        }, 1000);
+    }
+
+    playSound(type) {
+        if (!this.soundEnabled) return;
+        
+        // Visual sound feedback since we can't play actual sounds
+        const soundIndicator = document.createElement('div');
+        soundIndicator.className = `sound-effect sound-${type}`;
+        soundIndicator.textContent = this.getSoundIcon(type);
+        document.body.appendChild(soundIndicator);
+        
+        setTimeout(() => {
+            if (soundIndicator.parentNode) {
+                soundIndicator.remove();
+            }
+        }, 800);
+    }
+
+    getSoundIcon(type) {
+        const icons = {
+            click: '🔊',
+            destroy: '💥',
+            win: '🎉',
+            lose: '😔',
+            move: '⚡'
+        };
+        return icons[type] || '🔊';
+    }
+
+    renderGame() {
+        const gameBoard = document.getElementById('gameBoard');
+        if (!gameBoard) return; // Exit if game board doesn't exist
+
+        gameBoard.innerHTML = '';
+
+        this.piles.forEach((stones, pileIndex) => {
+            const pileDiv = document.createElement('div');
+            pileDiv.className = 'pile';
+            pileDiv.innerHTML = `<div class="pile-label">PILE ${pileIndex + 1}<br>[${stones} STONES]</div>`;
+
+            // Add pile click handler for easier mobile interaction
+            pileDiv.addEventListener('dblclick', () => {
+                if (stones > 0) {
+                    this.makeUserMove(pileIndex, stones - 1);
+                }
+            });
+
+            for (let i = 0; i < stones; i++) {
+                const stone = document.createElement('div');
+                stone.className = 'stone';
+                stone.dataset.pile = pileIndex;
+                stone.dataset.position = i;
+                stone.title = `Remove ${stones - i} stone(s) from Pile ${pileIndex + 1}`;
+                
+                // Add stone number for better UX
+                stone.innerHTML = `<span class="stone-number">${stones - i}</span>`;
+                
+                stone.addEventListener('click', () => this.makeUserMove(pileIndex, i));
+                stone.addEventListener('mouseenter', () => {
+                    this.previewMove(pileIndex, i);
+                });
+                stone.addEventListener('mouseleave', () => {
+                    this.clearPreview();
+                });
+                
+                pileDiv.appendChild(stone);
+            }
+
+            gameBoard.appendChild(pileDiv);
+        });
+
+        this.updatePileStats();
+    }
+
+    previewMove(pileIndex, stonePosition) {
+        const stones = document.querySelectorAll(`.stone[data-pile="${pileIndex}"]`);
+        const stonesToRemove = Array.from(stones).slice(stonePosition);
+        
+        stonesToRemove.forEach(stone => {
+            stone.classList.add('stone-preview');
+        });
+    }
+
+    clearPreview() {
+        document.querySelectorAll('.stone-preview').forEach(stone => {
+            stone.classList.remove('stone-preview');
+        });
+    }
+
+    updatePileStats() {
+        const totalStones = this.piles.reduce((sum, pile) => sum + pile, 0);
+        const activePiles = this.piles.filter(pile => pile > 0).length;
+        
+        // Update arena header with stats
+        const arenaText = document.querySelector('.game-board::before');
+        const gameBoard = document.querySelector('.game-board');
+        if (gameBoard) {
+            gameBoard.setAttribute('data-stats', `${totalStones} STONES • ${activePiles} PILES ACTIVE`);
+        }
+    }
+
+    makeUserMove(pileIndex, stonePosition) {
+        if (this.gameOver || this.currentPlayer !== 'user') return;
+
+        const stonesToRemove = this.piles[pileIndex] - stonePosition;
+        if (stonesToRemove <= 0) return;
+
+        this.playSound('click');
+        this.clearPreview();
+
+        // Animate stone removal
+        this.animateStoneRemoval(pileIndex, stonePosition, () => {
+            this.piles[pileIndex] = stonePosition;
+            this.logMove(`🎯 PLAYER: Eliminated ${stonesToRemove} stone(s) from Pile ${pileIndex + 1}`);
+            this.playSound('destroy');
+            
+            if (this.checkWinner()) {
+                this.endGame('user');
+                return;
+            }
+
+            this.currentPlayer = 'computer';
+            this.updateStatus('CPU CALCULATING...');
+            this.showThinkingAnimation();
+            
+            setTimeout(() => {
+                this.makeComputerMove();
+            }, 1200);
+        });
+    }
+
+    showThinkingAnimation() {
+        const statusElement = document.getElementById('gameStatus');
+        if (!statusElement) return;
+
+        let dots = '';
+        const thinkingInterval = setInterval(() => {
+            dots = dots.length >= 3 ? '' : dots + '.';
+            statusElement.textContent = `CPU CALCULATING${dots}`;
+        }, 300);
+
+        setTimeout(() => {
+            clearInterval(thinkingInterval);
+        }, 1200);
+    }
+
+    animateStoneRemoval(pileIndex, keepStones, callback) {
+        const stones = document.querySelectorAll(`.stone[data-pile="${pileIndex}"]`);
+        const stonesToRemove = Array.from(stones).slice(keepStones);
+        
+        stonesToRemove.forEach((stone, index) => {
+            setTimeout(() => {
+                stone.classList.add('removing');
+                this.createExplosionEffect(stone);
+                if (index === stonesToRemove.length - 1) {
+                    setTimeout(callback, 600);
+                }
+            }, index * 120);
+        });
+    }
+
+    createExplosionEffect(stone) {
+        const rect = stone.getBoundingClientRect();
+        const explosion = document.createElement('div');
+        explosion.className = 'explosion-effect';
+        explosion.style.left = rect.left + rect.width / 2 + 'px';
+        explosion.style.top = rect.top + rect.height / 2 + 'px';
+        explosion.textContent = '💥';
+        document.body.appendChild(explosion);
+        
+        setTimeout(() => {
+            if (explosion.parentNode) {
+                explosion.remove();
+            }
+        }, 600);
+    }
+
+    makeComputerMove() {
+        if (this.gameOver) return;
+
+        const move = this.getBestMove();
+        const stonesToRemove = this.piles[move.pile] - move.newSize;
+        
+        this.playSound('move');
+        
+        // Animate computer move
+        this.animateStoneRemoval(move.pile, move.newSize, () => {
+            this.piles[move.pile] = move.newSize;
+            this.logMove(`🤖 COMPUTER: Destroyed ${stonesToRemove} stone(s) from Pile ${move.pile + 1}`);
+            this.playSound('destroy');
+            
+            if (this.checkWinner()) {
+                this.endGame('computer');
+                return;
+            }
+
+            this.currentPlayer = 'user';
+            this.updateStatus('YOUR TURN');
+        });
+    }
+
+    getBestMove() {
+        // Nim optimal strategy using XOR (nim-sum)
+        let nimSum = 0;
+        this.piles.forEach(pile => nimSum ^= pile);
+
+        // Add difficulty levels
+        if (this.difficulty === 'easy' && Math.random() < 0.3) {
+            // 30% chance to make random move on easy
+            return this.getRandomMove();
+        }
+
+        // If nim-sum is 0, make any legal move
+        if (nimSum === 0) {
+            for (let i = 0; i < this.piles.length; i++) {
+                if (this.piles[i] > 0) {
+                    return { pile: i, newSize: Math.max(0, this.piles[i] - 1) };
+                }
+            }
+        }
+
+        // Find winning move
+        for (let i = 0; i < this.piles.length; i++) {
+            const target = this.piles[i] ^ nimSum;
+            if (target < this.piles[i]) {
+                return { pile: i, newSize: target };
+            }
+        }
+
+        // Fallback: make any legal move
+        return this.getRandomMove();
+    }
+
+    getRandomMove() {
+        const availablePiles = this.piles
+            .map((stones, index) => ({ index, stones }))
+            .filter(pile => pile.stones > 0);
+        
+        if (availablePiles.length === 0) return { pile: 0, newSize: 0 };
+        
+        const randomPile = availablePiles[Math.floor(Math.random() * availablePiles.length)];
+        const removeStones = Math.floor(Math.random() * randomPile.stones) + 1;
+        
+        return { 
+            pile: randomPile.index, 
+            newSize: Math.max(0, randomPile.stones - removeStones) 
+        };
+    }
+
+    checkWinner() {
+        return this.piles.every(pile => pile === 0);
+    }
+
+    endGame(winner) {
+        this.gameOver = true;
+        
+        if (winner === 'user') {
+            this.score.player++;
+            this.playSound('win');
+        } else {
+            this.score.computer++;
+            this.playSound('lose');
+        }
+        
+        const message = winner === 'user' 
+            ? '🎉 VICTORY ACHIEVED! 🎉<br>STRATEGIC SUPERIORITY CONFIRMED!' 
+            : '💻 COMPUTER VICTORY! 💻<br>RESISTANCE IS FUTILE!';
+        
+        this.showWinnerMessage(message);
+        this.updateStatus('BATTLE COMPLETE');
+        this.logMove(`🏆 ${winner === 'user' ? 'PLAYER' : 'COMPUTER'} EMERGES VICTORIOUS!`);
+        this.updateScoreDisplay();
+        this.createVictoryFireworks();
+    }
+
+    createVictoryFireworks() {
+        const colors = ['#ECB365', '#00ff41', '#ff6b6b', '#ffa500'];
+        
+        for (let i = 0; i < 10; i++) {
+            setTimeout(() => {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = Math.random() * window.innerWidth + 'px';
+                firework.style.top = Math.random() * window.innerHeight + 'px';
+                firework.style.color = colors[Math.floor(Math.random() * colors.length)];
+                firework.textContent = '✨';
+                document.body.appendChild(firework);
+                
+                setTimeout(() => {
+                    if (firework.parentNode) {
+                        firework.remove();
+                    }
+                }, 2000);
+            }, i * 200);
+        }
+    }
+
+    showWinnerMessage(message) {
+        const gameScreen = document.querySelector('.game-screen');
+        if (!gameScreen) return;
+
+        const winnerDiv = document.createElement('div');
+        winnerDiv.className = 'winner-message';
+        winnerDiv.innerHTML = `
+            <div>${message}</div>
+            <div style="font-size: 16px; margin-top: 20px; color: #00ff41;">
+                ⚡ INITIATE NEW BATTLE? ⚡<br>
+                <span style="font-size: 12px; margin-top: 10px; display: block;">
+                    Score: Player ${this.score.player} - ${this.score.computer} Computer
+                </span>
+            </div>
+        `;
+        
+        // Make winner message clickable to start new game
+        winnerDiv.addEventListener('click', () => {
+            this.resetGame();
+            winnerDiv.remove();
+        });
+        
+        gameScreen.appendChild(winnerDiv);
+
+        setTimeout(() => {
+            if (winnerDiv.parentNode) {
+                winnerDiv.remove();
+            }
+        }, 5000);
+    }
+
+    updateScoreDisplay() {
+        // Add score display to game header if it doesn't exist
+        let scoreDisplay = document.querySelector('.score-display');
+        if (!scoreDisplay) {
+            scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'score-display';
+            document.querySelector('.game-controls').appendChild(scoreDisplay);
+        }
+        
+        scoreDisplay.innerHTML = `
+            <div class="score-item">
+                <span class="score-label">PLAYER</span>
+                <span class="score-value">${this.score.player}</span>
+            </div>
+            <div class="score-separator">VS</div>
+            <div class="score-item">
+                <span class="score-label">CPU</span>
+                <span class="score-value">${this.score.computer}</span>
+            </div>
+        `;
+    }
+
+    updateStatus(status) {
+        const statusElement = document.getElementById('gameStatus');
+        if (statusElement) {
+            statusElement.textContent = status;
+        }
+    }
+
+    logMove(move) {
+        const logContent = document.getElementById('logContent');
+        if (!logContent) return;
+
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        logEntry.innerHTML = `<span style="color: #ECB365;">[${timestamp}]</span> ${move}`;
+        
+        // Add animation to new log entry
+        logEntry.style.opacity = '0';
+        logEntry.style.transform = 'translateX(-20px)';
+        logContent.appendChild(logEntry);
+        
+        // Animate in
+        setTimeout(() => {
+            logEntry.style.transition = 'all 0.3s ease';
+            logEntry.style.opacity = '1';
+            logEntry.style.transform = 'translateX(0)';
+        }, 50);
+        
+        logContent.scrollTop = logContent.scrollHeight;
+    }
+
+    resetGame() {
+        const logContent = document.getElementById('logContent');
+        if (logContent) {
+            logContent.innerHTML = '';
+        }
+        this.initializeGame();
+        console.log('Game reset');
+    }
+}
+
+// Initialize the game when DOM is loaded
+let nimGame;
+
+// Wait for DOM to be ready and initialize game
+document.addEventListener('DOMContentLoaded', function() {
+    // Small delay to ensure all elements are rendered
+    setTimeout(() => {
+        if (document.getElementById('gameBoard')) {
+            nimGame = new NimGame();
+            console.log('Nim game initialized');
+        }
+    }, 100);
+});
+
+// Reset game function for the button
+function resetGame() {
+    if (nimGame) {
+        nimGame.resetGame();
+    } else {
+        console.log('Game not initialized yet');
+        // Try to initialize if not already done
+        if (document.getElementById('gameBoard')) {
+            nimGame = new NimGame();
+        }
+    }
+}
+
 
 
