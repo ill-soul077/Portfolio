@@ -424,7 +424,9 @@ function loadPortfolioData(resume) {
 function loadSkills(skills) {
     var skillsContent = "";
     skills.forEach(function(skill) {
-        skillsContent += '<div class="skills-item"><h3>' + skill.name + '</h3>';
+        // Use 'situation' field as the category name and add data-category attribute
+        const categoryName = skill.situation || skill.name || 'Other';
+        skillsContent += '<div class="skills-item" data-category="' + categoryName + '"><h3>' + categoryName + '</h3>';
         
         // Parse keywords if it's a JSON string
         var keywords = [];
@@ -451,7 +453,220 @@ function loadSkills(skills) {
     // Use the global skillsHtml variable
     if (skillsHtml) {
         skillsHtml.innerHTML = skillsContent;
+        // Initialize skills filtering after content is loaded
+        setTimeout(() => {
+            initializeSkillsFiltering();
+        }, 100);
     }
+}
+
+// Skills Filtering and Statistics System
+function initializeSkillsFiltering() {
+    console.log('Initializing skills filtering...');
+    
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const skillsItems = document.querySelectorAll('.skills-item');
+    
+    console.log('Found filter buttons:', filterButtons.length);
+    console.log('Found skills items:', skillsItems.length);
+    
+    if (filterButtons.length === 0 || skillsItems.length === 0) {
+        console.log('Skills elements not found, retrying in 500ms...');
+        setTimeout(() => {
+            initializeSkillsFiltering();
+        }, 500);
+        return;
+    }
+    
+    // Initialize stats
+    updateSkillsStats();
+    
+    // Add click handlers to filter buttons
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.getAttribute('data-filter');
+            console.log('Filter clicked:', filter);
+            
+            // Update active button
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Filter skills with animation
+            filterSkills(filter);
+            
+            // Update stats
+            updateSkillsStats(filter);
+            
+            // Add cool click effect
+            createClickEffect(this);
+        });
+    });
+    
+    // Add hover effects to skill tags
+    const skillTags = document.querySelectorAll('.skill-tag');
+    skillTags.forEach(tag => {
+        tag.addEventListener('mouseenter', function() {
+            createSparkleEffect(this);
+        });
+    });
+    
+    console.log('Skills filtering initialized successfully!');
+}
+
+function filterSkills(filter) {
+    console.log('Filtering skills by:', filter);
+    const skillsItems = document.querySelectorAll('.skills-item');
+    
+    skillsItems.forEach(item => {
+        const category = item.getAttribute('data-category');
+        console.log('Item category:', category, 'Filter:', filter);
+        
+        if (filter === 'ALL' || category === filter) {
+            item.classList.remove('hidden');
+            item.style.display = 'block';
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(10px) scale(0.95)';
+            
+            // Animate in
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0) scale(1)';
+            }, 100);
+        } else {
+            item.classList.add('hidden');
+            item.style.opacity = '0';
+            item.style.transform = 'translateY(-10px) scale(0.95)';
+            
+            // Animate out
+            setTimeout(() => {
+                if (item.classList.contains('hidden')) {
+                    item.style.display = 'none';
+                }
+            }, 300);
+        }
+    });
+}
+
+function updateSkillsStats(activeFilter = 'ALL') {
+    console.log('Updating stats for filter:', activeFilter);
+    
+    const totalSkills = document.querySelectorAll('.skill-tag').length;
+    const categoriesCount = document.querySelectorAll('.skills-item').length;
+    
+    let visibleSkills = totalSkills;
+    let visibleCategories = categoriesCount;
+    
+    if (activeFilter !== 'ALL') {
+        const visibleItems = document.querySelectorAll('.skills-item:not(.hidden)');
+        visibleCategories = visibleItems.length;
+        visibleSkills = 0;
+        visibleItems.forEach(item => {
+            visibleSkills += item.querySelectorAll('.skill-tag').length;
+        });
+    }
+    
+    console.log('Stats - Total skills:', totalSkills, 'Visible skills:', visibleSkills, 'Categories:', visibleCategories);
+    
+    // Update stats with animation
+    const skillsStatElement = document.querySelector('.stat-skills .stat-number');
+    const categoriesStatElement = document.querySelector('.stat-categories .stat-number');
+    const experienceStatElement = document.querySelector('.stat-experience .stat-number');
+    
+    if (skillsStatElement) animateNumber(skillsStatElement, visibleSkills);
+    if (categoriesStatElement) animateNumber(categoriesStatElement, visibleCategories);
+    if (experienceStatElement) animateNumber(experienceStatElement, Math.floor(totalSkills / 3));
+    
+    // Update category counts
+    const skillsItems = document.querySelectorAll('.skills-item');
+    skillsItems.forEach(item => {
+        const tagCount = item.querySelectorAll('.skill-tag').length;
+        const header = item.querySelector('h3');
+        if (header) {
+            header.setAttribute('data-count', `${tagCount}`);
+        }
+    });
+}
+
+function animateNumber(element, targetNumber) {
+    if (!element) return;
+    
+    const startNumber = parseInt(element.textContent) || 0;
+    const duration = 1000;
+    const startTime = performance.now();
+    
+    function updateNumber(currentTime) {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // Easing function for smooth animation
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        const currentNumber = Math.floor(startNumber + (targetNumber - startNumber) * easeOut);
+        
+        element.textContent = currentNumber;
+        
+        if (progress < 1) {
+            requestAnimationFrame(updateNumber);
+        } else {
+            element.textContent = targetNumber;
+        }
+    }
+    
+    requestAnimationFrame(updateNumber);
+}
+
+function createClickEffect(button) {
+    const effect = document.createElement('div');
+    effect.style.position = 'absolute';
+    effect.style.top = '50%';
+    effect.style.left = '50%';
+    effect.style.width = '0';
+    effect.style.height = '0';
+    effect.style.background = 'radial-gradient(circle, rgba(236, 179, 101, 0.8) 0%, transparent 70%)';
+    effect.style.borderRadius = '50%';
+    effect.style.transform = 'translate(-50%, -50%)';
+    effect.style.pointerEvents = 'none';
+    effect.style.zIndex = '10';
+    
+    button.style.position = 'relative';
+    button.appendChild(effect);
+    
+    // Animate the effect
+    effect.animate([
+        { width: '0', height: '0', opacity: 1 },
+        { width: '100px', height: '100px', opacity: 0 }
+    ], {
+        duration: 600,
+        easing: 'ease-out'
+    }).addEventListener('finish', () => {
+        effect.remove();
+    });
+}
+
+function createSparkleEffect(element) {
+    const sparkle = document.createElement('div');
+    sparkle.innerHTML = '✨';
+    sparkle.style.position = 'absolute';
+    sparkle.style.top = Math.random() * 20 - 10 + 'px';
+    sparkle.style.left = Math.random() * 20 - 10 + 'px';
+    sparkle.style.fontSize = '12px';
+    sparkle.style.pointerEvents = 'none';
+    sparkle.style.zIndex = '10';
+    sparkle.style.opacity = '0';
+    
+    element.style.position = 'relative';
+    element.appendChild(sparkle);
+    
+    // Animate sparkle
+    sparkle.animate([
+        { opacity: 0, transform: 'translateY(0) scale(0.5)' },
+        { opacity: 1, transform: 'translateY(-10px) scale(1)' },
+        { opacity: 0, transform: 'translateY(-20px) scale(0.5)' }
+    ], {
+        duration: 1000,
+        easing: 'ease-out'
+    }).addEventListener('finish', () => {
+        sparkle.remove();
+    });
 }
 
 // Function to load projects
