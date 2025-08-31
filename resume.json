@@ -1,0 +1,223 @@
+{
+  "meta": {
+    "theme": "actual"
+  },
+  "basics": {
+    "name": "Naquib Hassan",
+    "label": "Software Developer",
+    "image": "ILLSOUL.jpg",
+    "summary": "Passionate software developer with expertise in modern web technologies, mobile development, and numerical analysis. Experienced in developing Android applications, web solutions, and contributing to open-source projects. Strong background in computer science with a focus on creating efficient and user-friendly applications.",
+    "summarytr": "Software Developer alanında gelişimim devam ediyor. Modern web teknolojileri, mobil geliştirme ve sayısal analiz konularında uzmanım. Android uygulamaları, web çözümleri geliştirmekte ve açık kaynak projelere katkıda bulunmaktayım.",
+    "website": "#",
+    "email": "naquib.hassan@example.com",
+    "location": {
+      "city": "Dhaka",
+      "countryCode": "BD"
+    },
+    "profiles": {
+      "twitter":{
+        "username": "naquib_dev",
+        "url": "https://twitter.com/naquib_dev"
+      },
+      "github":{
+        "url": "https://github.com/ill-soul077",
+        "username": "ill-soul077"
+      },
+      "linkedin":{
+        "username": "naquib-hassan",
+        "url": "https://www.linkedin.com/in/naquib-hassan"
+      }  
+    }
+  },
+
+  "repository": [
+    {
+      "name": "Android Project - Time Tracker",
+      "explanation": "A comprehensive time tracking application for Android devices with modern UI and efficient performance tracking capabilities.",
+      "tag": ["android", "java", "sqlite", "material-design"],
+      "bestLang": "java",
+      "date": "2024.01.15",
+      "link": "https://github.com/ill-soul077/AndroidProject-Timetracker",
+      "viewLink": ""
+    },
+    {
+      "name": "Numerical Lab",
+      "explanation": "A collection of numerical analysis algorithms and mathematical computations implemented for educational and research purposes.",
+      "tag": ["python", "mathematics", "algorithms", "numpy"],
+      "bestLang": "python",
+      "date": "2023.12.10",
+      "link": "https://github.com/ill-soul077/Numerical-Lab",
+      "viewLink": ""
+    },
+    {
+      "name": "Portfolio Website",
+      "explanation": "Personal portfolio website showcasing projects, skills, and professional experience with responsive design.",
+      "tag": ["html5", "css3", "javascript", "responsive"],
+      "bestLang": "javascript",
+      "date": "2023.11.20",
+      "link": "#",
+      "viewLink": ""
+    }
+  ],
+  
+  "education": [
+    {
+      "institution": "Khulna University of Engineering and Technology (KUET)",
+      "area": "Computer Science & Engineering",
+      "studyType": "B.Sc.",
+      "startDate": "2023",
+      "endDate": "present",
+      "gpa": "3.72 (till present)",
+      "courses": ["Dean's Award recipient"]
+    },
+    {
+      "institution": "Notre Dame College, Dhaka",
+      "area": "Science",
+      "studyType": "Higher Secondary Certificate (HSC)",
+      "startDate": "2019",
+      "endDate": "2022",
+      "gpa": "5.00",
+      "courses": []
+    },
+    {
+      "institution": "Cox's Bazar Government High School",
+      "area": "Science",
+      "studyType": "Secondary School Certificate (SSC)",
+      "startDate": "2014",
+      "endDate": "2019",
+      "gpa": "5.00",
+      "courses": []
+    }
+  ],
+  "academic_highlights": [
+    "B.Sc. in Computer Science & Engineering",
+    "CGPA: 3.72 (till present)",
+    "Dean's Award recipient",
+    "Higher Secondary Certificate (HSC), GPA: 5.00",
+    "Secondary School Certificate (SSC), GPA: 5.00"
+  ],
+  "references": [
+    {
+      "reference": "",
+      "name": ""
+    },
+    {
+      "reference":"", 
+      "name": ""
+    },
+    {
+      "reference":"",
+      "name": ""
+    },
+    {
+      "reference": "",
+      "name": ""
+    }
+  ],
+  "skills": [
+    {
+      "keywords": [
+        "JavaScript",
+        "Python",
+        "Java",
+        "PHP",
+        "TypeScript",
+        "C++"
+      ],
+      "situation": "Programming Languages",
+      "level": "Expert"
+    },
+    {
+      "keywords": [
+        "React.js",
+        "Vue.js",
+        "HTML5",
+        "CSS3",
+        "Bootstrap",
+        "Tailwind CSS"
+      ],
+      "situation": "Frontend Development",
+      "level": "Advanced"
+    },
+    {
+      "keywords": [
+        "Node.js",
+        "Express.js",
+        "Django",
+        "Laravel",
+        "REST APIs",
+        "GraphQL"
+      ],
+      "situation": "Backend Development",
+      "level": "Advanced"
+    },
+    {
+      "keywords": [
+        "MySQL",
+        "MongoDB",
+        "PostgreSQL",
+        "SQLite",
+        "Redis"
+      ],
+      "situation": "Database Technologies",
+      "level": "Intermediate"
+    },
+    {
+      "keywords": [
+        "Android Development",
+        "React Native",
+        "Flutter",
+        "Ionic"
+      ],
+      "situation": "Mobile Development",
+      "level": "Intermediate"
+    },
+    {
+      "keywords": [
+        "Git",
+        "Docker",
+        "AWS",
+        "Jenkins",
+        "Webpack",
+        "Linux"
+      ],
+      "situation": "Tools & Technologies",
+      "level": "Intermediate"
+    }
+  ],
+  "awards": [
+    {
+      "title": "",
+      "awarder": ""
+    }
+  ],
+  "work": [
+    {
+      "position": "Software Developer",
+      "name": "Tech Solutions Ltd.",
+      "startDate": "2023-01",
+      "endDate": "Present",
+      "location": "Dhaka, Bangladesh",
+      "summary": "Developing web and mobile applications using modern technologies. Collaborated with cross-functional teams to deliver high-quality software solutions. Implemented automated testing and deployment processes."
+    },
+    {
+      "position": "Junior Developer",
+      "name": "Digital Innovations Inc.",
+      "startDate": "2022-06",
+      "endDate": "2022-12",
+      "location": "Dhaka, Bangladesh",
+      "summary": "Worked on frontend development using React.js and backend APIs. Participated in code reviews and contributed to improving development processes."
+    }
+  ],
+
+  "interests": [
+    "Web Development",
+    "Mobile App Development", 
+    "Machine Learning",
+    "Open Source Contributing",
+    "Technology Blogging",
+    "Gaming",
+    "Photography",
+    "Traveling"
+  ]
+}

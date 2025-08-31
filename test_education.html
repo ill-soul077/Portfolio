@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Education Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .education-item { border: 1px solid #ddd; padding: 15px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Education Data Test</h1>
+    <div id="result"></div>
+    
+    <script>
+        fetch('resume.json')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Full JSON data:', data);
+            
+            const resultDiv = document.getElementById('result');
+            
+            if (data.education && Array.isArray(data.education)) {
+                resultDiv.innerHTML = '<h2 class="success">✅ Education data loaded successfully!</h2>';
+                
+                data.education.forEach((edu, index) => {
+                    resultDiv.innerHTML += `
+                        <div class="education-item">
+                            <h3>${edu.institution || 'No institution'}</h3>
+                            <p><strong>Area:</strong> ${edu.area || 'N/A'}</p>
+                            <p><strong>Study Type:</strong> ${edu.studyType || 'N/A'}</p>
+                            <p><strong>Duration:</strong> ${edu.startDate || 'N/A'} - ${edu.endDate || 'N/A'}</p>
+                            <p><strong>GPA:</strong> ${edu.gpa || 'N/A'}</p>
+                            <p><strong>Achievements:</strong> ${edu.courses ? edu.courses.join(', ') : 'None'}</p>
+                        </div>
+                    `;
+                });
+                
+                if (data.academic_highlights) {
+                    resultDiv.innerHTML += '<h3>Academic Highlights:</h3><ul>';
+                    data.academic_highlights.forEach(highlight => {
+                        resultDiv.innerHTML += `<li>${highlight}</li>`;
+                    });
+                    resultDiv.innerHTML += '</ul>';
+                }
+                
+            } else {
+                resultDiv.innerHTML = '<h2 class="error">❌ Education data not found or invalid format!</h2>';
+                resultDiv.innerHTML += '<p>Found data type: ' + typeof data.education + '</p>';
+                resultDiv.innerHTML += '<p>Data: ' + JSON.stringify(data.education) + '</p>';
+            }
+        })
+        .catch(error => {
+            document.getElementById('result').innerHTML = `
+                <h2 class="error">❌ Error loading JSON data!</h2>
+                <p>${error.message}</p>
+            `;
+        });
+    </script>
+</body>
+</html>

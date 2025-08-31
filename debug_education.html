@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Education Loading</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .debug { background: #f0f0f0; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Debug Education Loading</h1>
+    <button onclick="fetchData()">Reload Data (No Cache)</button>
+    <div id="result"></div>
+    
+    <script>
+        function fetchData() {
+            // Add timestamp to prevent caching
+            fetch('resume.json?' + new Date().getTime())
+            .then(response => {
+                console.log('Response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Raw data received:', data);
+                
+                const resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '';
+                
+                // Show raw JSON for education
+                resultDiv.innerHTML += '<div class="debug"><h3>Raw Education Data:</h3><pre>' + JSON.stringify(data.education, null, 2) + '</pre></div>';
+                
+                // Test the actual loading like in script.js
+                let education = data.education;
+                resultDiv.innerHTML += '<div class="debug"><h3>Education Array Length:</h3>' + education.length + '</div>';
+                
+                // Test the loop
+                let testHTML = '';
+                for(let i in education){
+                    let edu = education[i];
+                    testHTML += '<hr>';
+                    testHTML += '<h3>' + (edu.institution || 'NO INSTITUTION') + '</h3>';
+                    testHTML += '<h4>' + (edu.area || 'NO AREA') + ' (' + (edu.studyType || 'NO STUDY TYPE') + ')</h4>';
+                    testHTML += '<p class="worksSpan">(' + (edu.startDate || 'NO START') + '-' + (edu.endDate || 'NO END') + ')</p>';
+                    if(edu.gpa) {
+                        testHTML += '<p><strong>GPA/CGPA:</strong> ' + edu.gpa + '</p>';
+                    }
+                    if(edu.courses && edu.courses.length > 0) {
+                        testHTML += '<p><strong>Achievements:</strong> ' + edu.courses.join(', ') + '</p>';
+                    }
+                }
+                
+                resultDiv.innerHTML += '<div class="debug"><h3>Generated HTML:</h3>' + testHTML + '</div>';
+                
+                // Test each education object individually
+                education.forEach((edu, index) => {
+                    resultDiv.innerHTML += '<div class="debug"><h3>Education ' + index + ':</h3>';
+                    resultDiv.innerHTML += '<p><strong>Institution:</strong> ' + (edu.institution || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>Area:</strong> ' + (edu.area || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>Study Type:</strong> ' + (edu.studyType || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>Start Date:</strong> ' + (edu.startDate || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>End Date:</strong> ' + (edu.endDate || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>GPA:</strong> ' + (edu.gpa || 'UNDEFINED') + '</p>';
+                    resultDiv.innerHTML += '<p><strong>Courses:</strong> ' + JSON.stringify(edu.courses) + '</p>';
+                    resultDiv.innerHTML += '</div>';
+                });
+                
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `
+                    <h2 class="error">❌ Error loading JSON data!</h2>
+                    <p>${error.message}</p>
+                `;
+            });
+        }
+        
+        // Load data immediately
+        fetchData();
+    </script>
+</body>
+</html>
