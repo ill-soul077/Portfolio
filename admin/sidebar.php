@@ -19,6 +19,9 @@
         <li><a href="manage_education.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_education.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-graduation-cap"></i> Education
         </a></li>
+        <li><a href="manage_messages.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_messages.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-envelope"></i> Messages
+        </a></li>
         <li><a href="manage_interests.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_interests.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-heart"></i> Interests
         </a></li>

@@ -1,0 +1,360 @@
+/* Nim Game Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Source Code Pro', 'Courier New', monospace;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    color: #ffffff;
+    overflow-x: auto;
+}
+
+.game-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Header */
+.game-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+}
+
+.game-header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #ffd700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.game-description {
+    font-size: 1.2em;
+    margin-bottom: 20px;
+    opacity: 0.9;
+}
+
+.game-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(108, 117, 125, 0.4);
+}
+
+/* Game Status */
+.game-status {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.turn-indicator {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 15px 30px;
+    background: rgba(255, 215, 0, 0.2);
+    border-radius: 25px;
+    border: 2px solid #ffd700;
+    display: inline-block;
+    animation: pulse 2s infinite;
+}
+
+.game-message {
+    font-size: 1.4em;
+    margin-top: 10px;
+    min-height: 1.5em;
+}
+
+.winner-message {
+    color: #4CAF50;
+    font-weight: bold;
+    animation: celebration 1s ease-in-out;
+}
+
+.loser-message {
+    color: #f44336;
+    font-weight: bold;
+}
+
+/* Game Board */
+.game-board {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    min-height: 400px;
+    align-items: flex-end;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+}
+
+.pile {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    min-width: 120px;
+    margin: 10px;
+}
+
+.pile-label {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.pile-stones {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 2px;
+}
+
+.stone {
+    width: 60px;
+    height: 25px;
+    background: linear-gradient(145deg, #8B4513, #A0522D);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid #654321;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.stone:hover {
+    transform: scale(1.1) translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.6);
+    border-color: #ffd700;
+    background: linear-gradient(145deg, #DAA520, #FFD700);
+}
+
+.stone::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 8px;
+    right: 8px;
+    height: 8px;
+    background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+    border-radius: 8px;
+}
+
+.stone.removing {
+    animation: removeStone 0.5s ease-in-out forwards;
+}
+
+/* Move Log */
+.move-log-container {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.move-log-container h3 {
+    color: #ffd700;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.move-log {
+    max-height: 200px;
+    overflow-y: auto;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.log-entry {
+    padding: 8px 12px;
+    margin-bottom: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #ffd700;
+    animation: slideInLeft 0.3s ease-out;
+}
+
+.log-entry.user-move {
+    border-left-color: #4CAF50;
+}
+
+.log-entry.computer-move {
+    border-left-color: #f44336;
+}
+
+/* Animations */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes celebration {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.1) rotate(-5deg); }
+    75% { transform: scale(1.1) rotate(5deg); }
+}
+
+@keyframes removeStone {
+    0% { 
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% { 
+        transform: scale(1.2) rotate(10deg);
+        opacity: 0.7;
+    }
+    100% { 
+        transform: scale(0) rotate(30deg);
+        opacity: 0;
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-header h1 {
+        font-size: 2em;
+    }
+    
+    .game-description {
+        font-size: 1em;
+    }
+    
+    .game-board {
+        gap: 10px;
+        padding: 15px;
+    }
+    
+    .pile {
+        min-width: 80px;
+        margin: 5px;
+    }
+    
+    .stone {
+        width: 50px;
+        height: 20px;
+    }
+    
+    .turn-indicator {
+        font-size: 1.4em;
+        padding: 10px 20px;
+    }
+    
+    .game-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .game-board {
+        flex-direction: column;
+        align-items: center;
+        min-height: auto;
+    }
+    
+    .pile {
+        flex-direction: row;
+        min-width: auto;
+        margin: 10px 0;
+    }
+    
+    .pile-stones {
+        flex-direction: row;
+        gap: 3px;
+    }
+    
+    .stone {
+        width: 40px;
+        height: 25px;
+    }
+}
+
+/* Computer thinking indicator */
+.thinking {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.computer-turn .game-board {
+    opacity: 0.8;
+}
+
+.computer-turn .stone {
+    cursor: not-allowed;
+}
+
+.computer-turn .stone:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border-color: #654321;
+    background: linear-gradient(145deg, #8B4513, #A0522D);
+}

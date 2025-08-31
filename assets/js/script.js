@@ -562,6 +562,108 @@ function loadEducation(education) {
     document.getElementById("education").innerHTML = educationHtml;
 }
 
+// Contact Form Handler
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    const contactStatus = document.getElementById('contactStatus');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(contactForm);
+            const submitButton = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            
+            // Show loading state
+            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+            submitButton.disabled = true;
+            
+            fetch('send_contact.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                contactStatus.style.display = 'block';
+                contactStatus.className = 'contact-status ' + (data.success ? 'success' : 'error');
+                contactStatus.textContent = data.message;
+                
+                if (data.success) {
+                    contactForm.reset();
+                }
+            })
+            .catch(error => {
+                contactStatus.style.display = 'block';
+                contactStatus.className = 'contact-status error';
+                contactStatus.textContent = 'Network error. Please try again.';
+                console.error('Contact form error:', error);
+            })
+            .finally(() => {
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+                
+                // Hide status message after 5 seconds
+                setTimeout(() => {
+                    contactStatus.style.display = 'none';
+                }, 5000);
+            });
+        });
+    }
+});
+
+// Navigation active link management
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all navigation links
+    const navLinks = document.querySelectorAll('.topnav a[href^="#"]');
+    const sections = document.querySelectorAll('div[id]');
+    
+    // Function to update active navigation link
+    function updateActiveLink() {
+        let currentSection = '';
+        
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop - 70; // Account for fixed nav height
+            const sectionHeight = section.offsetHeight;
+            
+            if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                currentSection = section.id;
+            }
+        });
+        
+        // Update navigation links
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSection}`) {
+                link.classList.add('active');
+            }
+        });
+    }
+    
+    // Add smooth scrolling to navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            
+            if (targetSection) {
+                const offsetTop = targetSection.offsetTop - 60; // Account for fixed nav
+                window.scrollTo({
+                    top: offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+    
+    // Update active link on scroll
+    window.addEventListener('scroll', updateActiveLink);
+    
+    // Initial update
+    updateActiveLink();
+});
+
 //https://www.youtube.com/watch?v=UkB-zKNBVTo&list=PLv1CRNciwsrf_DA7Yl3_kdsqYjbjbMB8r&index=3
 
 
