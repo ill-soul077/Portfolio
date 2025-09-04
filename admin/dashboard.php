@@ -13,7 +13,10 @@ $skillsCount = $conn->query("SELECT COUNT(*) as count FROM skills WHERE is_activ
 $projectsCount = $conn->query("SELECT COUNT(*) as count FROM repositories")->fetch();
 $workCount = $conn->query("SELECT COUNT(*) as count FROM work_experience")->fetch();
 $educationCount = $conn->query("SELECT COUNT(*) as count FROM education")->fetch();
+$achievementsCount = $conn->query("SELECT COUNT(*) as count FROM achievements WHERE is_active = 1")->fetch();
 $highlightsCount = $conn->query("SELECT COUNT(*) as count FROM academic_highlights")->fetch();
+$interestsCount = $conn->query("SELECT COUNT(*) as count FROM interests")->fetch();
+$socialCount = $conn->query("SELECT COUNT(*) as count FROM social_profiles WHERE is_active = 1")->fetch();
 $messagesCount = $conn->query("SELECT COUNT(*) as count FROM contact_messages WHERE is_read = 0")->fetch();
 $totalMessagesCount = $conn->query("SELECT COUNT(*) as count FROM contact_messages")->fetch();
 
@@ -309,10 +312,34 @@ $recentMessages = $conn->query("SELECT name, email, subject, created_at FROM con
 
             <div class="stat-card">
                 <div class="icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <div class="number"><?php echo $achievementsCount['count']; ?></div>
+                <div class="label">Achievements</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon">
                     <i class="fas fa-award"></i>
                 </div>
                 <div class="number"><?php echo $highlightsCount['count']; ?></div>
                 <div class="label">Academic Highlights</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <div class="number"><?php echo $interestsCount['count']; ?></div>
+                <div class="label">Interests</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="icon">
+                    <i class="fas fa-share-alt"></i>
+                </div>
+                <div class="number"><?php echo $socialCount['count']; ?></div>
+                <div class="label">Social Profiles</div>
             </div>
         </div>
 

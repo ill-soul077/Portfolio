@@ -832,8 +832,8 @@ function loadAchievements(achievements) {
             achievementsHtml += '</div>';
             achievementsHtml += '<div class="achievement-content">';
             achievementsHtml += '<h3>' + achievement.title + '</h3>';
-            if (achievement.date) {
-                achievementsHtml += '<div class="achievement-date">' + achievement.date + '</div>';
+            if (achievement.year) {
+                achievementsHtml += '<div class="achievement-date">' + achievement.year + '</div>';
             }
             if (achievement.description) {
                 achievementsHtml += '<p>' + achievement.description + '</p>';

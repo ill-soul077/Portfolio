@@ -19,6 +19,18 @@
         <li><a href="manage_education.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_education.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-graduation-cap"></i> Education
         </a></li>
+        <li><a href="manage_achievements.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_achievements.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-trophy"></i> Achievements
+        </a></li>
+        <li><a href="manage_highlights.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_highlights.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-award"></i> Academic Highlights
+        </a></li>
+        <li><a href="manage_interests.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_interests.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-heart"></i> Interests
+        </a></li>
+        <li><a href="manage_social.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_social.php' ? 'class="active"' : ''; ?>>
+            <i class="fas fa-share-alt"></i> Social Profiles
+        </a></li>
         <li><a href="manage_messages.php" <?php echo basename($_SERVER['PHP_SELF']) == 'manage_messages.php' ? 'class="active"' : ''; ?>>
             <i class="fas fa-envelope"></i> Messages
         </a></li>
