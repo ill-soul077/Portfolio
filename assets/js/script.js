@@ -456,6 +456,10 @@ function loadPortfolioData(resume) {
     if (resume.education && resume.education.length > 0) {
         loadEducation(resume.education);
     }
+    
+    if (resume.achievements && resume.achievements.length > 0) {
+        loadAchievements(resume.achievements);
+    }
 }
 
 // Function to load skills
@@ -813,6 +817,41 @@ function loadEducation(education) {
         educationHtml += '</div>';
     });
     document.getElementById("education").innerHTML = educationHtml;
+}
+
+// Function to load achievements
+function loadAchievements(achievements) {
+    var achievementsHtml = "";
+    if (achievements && achievements.length > 0) {
+        achievements.forEach(function(achievement) {
+            achievementsHtml += '<div class="achievement-item">';
+            achievementsHtml += '<div class="achievement-icon">';
+            if (achievement.icon) {
+                achievementsHtml += '<i class="' + achievement.icon + '" style="color: ' + (achievement.color || '#ECB365') + ';"></i>';
+            }
+            achievementsHtml += '</div>';
+            achievementsHtml += '<div class="achievement-content">';
+            achievementsHtml += '<h3>' + achievement.title + '</h3>';
+            if (achievement.date) {
+                achievementsHtml += '<div class="achievement-date">' + achievement.date + '</div>';
+            }
+            if (achievement.description) {
+                achievementsHtml += '<p>' + achievement.description + '</p>';
+            }
+            if (achievement.category) {
+                achievementsHtml += '<span class="achievement-category">' + achievement.category + '</span>';
+            }
+            achievementsHtml += '</div>';
+            achievementsHtml += '</div>';
+        });
+    } else {
+        achievementsHtml = '<div class="achievement-item"><div class="achievement-content"><p>No achievements found.</p></div></div>';
+    }
+    
+    const achievementsContainer = document.getElementById("achievements");
+    if (achievementsContainer) {
+        achievementsContainer.innerHTML = achievementsHtml;
+    }
 }
 
 // Contact Form Handler

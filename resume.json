@@ -200,6 +200,41 @@
     }
   ],
 
+  "achievements": [
+    {
+      "title": "Dean's List",
+      "year": "2025",
+      "description": "Achieved Dean's List recognition for outstanding academic performance and maintaining excellent GPA throughout the academic year.",
+      "category": "Academic",
+      "icon": "fas fa-trophy",
+      "color": "#FFD700"
+    },
+    {
+      "title": "Specialist in Codeforces",
+      "year": "2024",
+      "description": "Achieved Specialist rating in Codeforces competitive programming platform, demonstrating strong problem-solving and algorithmic skills.",
+      "category": "Programming",
+      "icon": "fas fa-code",
+      "color": "#ECB365"
+    },
+    {
+      "title": "14th Place - KU Regional IUPC",
+      "year": "2024",
+      "description": "Secured 14th position in Khulna University Regional Inter-University Programming Contest, competing against top programming teams from various universities.",
+      "category": "Competition",
+      "icon": "fas fa-medal",
+      "color": "#CD7F32"
+    },
+    {
+      "title": "93rd Place - KUET IUPC",
+      "year": "2024",
+      "description": "Ranked 93rd in KUET Inter-University Programming Contest, showcasing competitive programming expertise and teamwork skills in a challenging environment.",
+      "category": "Competition",
+      "icon": "fas fa-award",
+      "color": "#C0C0C0"
+    }
+  ],
+
   "interests": [
     "Web Development",
     "Mobile App Development", 

@@ -39,6 +39,7 @@ try {
         'repository' => [],
         'work' => [],
         'education' => [],
+        'achievements' => [],
         'academic_highlights' => [],
         'interests' => []
     ];
@@ -177,6 +178,22 @@ try {
             'courses' => $courses,
             'location' => $edu['location'] ?? '',
             'is_current' => $edu['is_current'] ?? false
+        ];
+    }
+    
+    // Get achievements
+    $stmt = $conn->prepare("SELECT * FROM achievements WHERE is_active = 1 ORDER BY display_order, year DESC");
+    $stmt->execute();
+    $achievements = $stmt->fetchAll();
+    
+    foreach ($achievements as $achievement) {
+        $response['achievements'][] = [
+            'title' => $achievement['title'],
+            'year' => $achievement['year'],
+            'description' => $achievement['description'],
+            'category' => $achievement['category'],
+            'icon' => $achievement['icon'],
+            'color' => $achievement['color']
         ];
     }
     
