@@ -7,13 +7,18 @@ require_once 'auth_check.php';
 $db = new Database();
 $conn = $db->getConnection();
 
-// Get counts for dashboard stats
-$basicInfo = $conn->query("SELECT COUNT(*) as count FROM portfolio_basics")->fetch();
-$skillsCount = $conn->query("SELECT COUNT(*) as count FROM skills")->fetch();
+// Get counts for dashboard stats (updated for new structure)
+$basicInfo = $conn->query("SELECT COUNT(*) as count FROM portfolio_basics WHERE is_active = 1")->fetch();
+$skillsCount = $conn->query("SELECT COUNT(*) as count FROM skills WHERE is_active = 1")->fetch();
 $projectsCount = $conn->query("SELECT COUNT(*) as count FROM repositories")->fetch();
 $workCount = $conn->query("SELECT COUNT(*) as count FROM work_experience")->fetch();
 $educationCount = $conn->query("SELECT COUNT(*) as count FROM education")->fetch();
 $highlightsCount = $conn->query("SELECT COUNT(*) as count FROM academic_highlights")->fetch();
+$messagesCount = $conn->query("SELECT COUNT(*) as count FROM contact_messages WHERE is_read = 0")->fetch();
+$totalMessagesCount = $conn->query("SELECT COUNT(*) as count FROM contact_messages")->fetch();
+
+// Get recent messages
+$recentMessages = $conn->query("SELECT name, email, subject, created_at FROM contact_messages ORDER BY created_at DESC LIMIT 5")->fetchAll();
 ?>
 
 <!DOCTYPE html>

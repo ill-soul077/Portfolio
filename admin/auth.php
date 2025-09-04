@@ -24,15 +24,20 @@ try {
     $db = new Database();
     $conn = $db->getConnection();
     
-    // Find user
-    $stmt = $conn->prepare("SELECT id, username, password FROM admin_users WHERE username = ?");
+    // Find user (updated for new structure)
+    $stmt = $conn->prepare("SELECT id, username, password, full_name, is_active FROM admin_users WHERE username = ? AND is_active = 1");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
     
     if ($user && password_verify($password, $user['password'])) {
+        // Update last login
+        $updateStmt = $conn->prepare("UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = ?");
+        $updateStmt->execute([$user['id']]);
+        
         // Login successful
         $_SESSION['admin_id'] = $user['id'];
         $_SESSION['admin_username'] = $user['username'];
+        $_SESSION['admin_full_name'] = $user['full_name'];
         $_SESSION['admin_logged_in'] = true;
         
         // Set remember me cookie (7 days)

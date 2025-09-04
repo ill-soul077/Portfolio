@@ -43,14 +43,14 @@ try {
         'interests' => []
     ];
     
-    // Get basic information
-    $stmt = $conn->prepare("SELECT * FROM portfolio_basics LIMIT 1");
+    // Get basic information (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM portfolio_basics WHERE is_active = 1 LIMIT 1");
     $stmt->execute();
     $basics = $stmt->fetch();
     
     if ($basics) {
         // Get social profiles
-        $stmt = $conn->prepare("SELECT * FROM social_profiles");
+        $stmt = $conn->prepare("SELECT * FROM social_profiles WHERE is_active = 1 ORDER BY display_order");
         $stmt->execute();
         $profiles = $stmt->fetchAll();
         
@@ -65,8 +65,9 @@ try {
         $response['basics'] = [
             'name' => $basics['name'],
             'label' => $basics['label'],
-            'image' => 'assets/images/' . $basics['image'],
+            'image' => $basics['image'], // Keep as is, path will be handled in frontend
             'summary' => $basics['summary'],
+            'summarytr' => $basics['summary_tr'] ?? '',
             'email' => $basics['email'],
             'website' => $basics['website'],
             'location' => [
@@ -77,8 +78,8 @@ try {
         ];
     }
     
-    // Get skills
-    $stmt = $conn->prepare("SELECT * FROM skills ORDER BY created_at");
+    // Get skills (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM skills WHERE is_active = 1 ORDER BY display_order, situation");
     $stmt->execute();
     $skills = $stmt->fetchAll();
     
@@ -95,47 +96,68 @@ try {
         }
         
         $response['skills'][] = [
-            'name' => $skill['situation'], // Changed to 'name' for consistency
+            'situation' => $skill['situation'], // Keep as 'situation' to match frontend
             'keywords' => $keywords,
-            'level' => $skill['level']
+            'level' => $skill['level'],
+            'proficiency_percentage' => $skill['proficiency_percentage'] ?? 0,
+            'years_experience' => $skill['years_experience'] ?? 0
         ];
     }
     
-    // Get repositories/projects
-    $stmt = $conn->prepare("SELECT * FROM repositories ORDER BY date DESC");
+    // Get repositories/projects (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM repositories ORDER BY display_order, date DESC");
     $stmt->execute();
     $repositories = $stmt->fetchAll();
     
     foreach ($repositories as $repo) {
+        $tags = [];
+        if (!empty($repo['tags'])) {
+            $decoded = json_decode($repo['tags'], true);
+            if (is_array($decoded)) {
+                $tags = $decoded;
+            }
+        }
+        
         $response['repository'][] = [
             'name' => $repo['name'],
             'explanation' => $repo['explanation'],
-            'tag' => json_decode($repo['tags'], true) ?: [],
+            'tag' => $tags,
             'bestLang' => $repo['best_lang'],
             'date' => $repo['date'],
             'link' => $repo['link'],
-            'viewLink' => $repo['view_link']
+            'viewLink' => $repo['view_link'] ?? $repo['demo_url'] ?? '',
+            'github_url' => $repo['github_url'] ?? $repo['link']
         ];
     }
     
-    // Get work experience
-    $stmt = $conn->prepare("SELECT * FROM work_experience ORDER BY start_date DESC");
+    // Get work experience (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM work_experience ORDER BY display_order, start_date DESC");
     $stmt->execute();
     $workExperiences = $stmt->fetchAll();
     
     foreach ($workExperiences as $work) {
+        $technologies = [];
+        if (!empty($work['technologies'])) {
+            $decoded = json_decode($work['technologies'], true);
+            if (is_array($decoded)) {
+                $technologies = $decoded;
+            }
+        }
+        
         $response['work'][] = [
             'position' => $work['position'],
             'name' => $work['company_name'],
             'startDate' => $work['start_date'],
             'endDate' => $work['end_date'],
             'location' => $work['location'],
-            'summary' => $work['summary']
+            'summary' => $work['summary'],
+            'technologies' => $technologies,
+            'is_current' => $work['is_current'] ?? false
         ];
     }
     
-    // Get education
-    $stmt = $conn->prepare("SELECT * FROM education ORDER BY start_date DESC");
+    // Get education (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM education ORDER BY display_order, start_date DESC");
     $stmt->execute();
     $educations = $stmt->fetchAll();
     
@@ -152,12 +174,14 @@ try {
             'startDate' => $edu['start_date'],
             'endDate' => $edu['end_date'],
             'gpa' => $edu['gpa'],
-            'courses' => $courses
+            'courses' => $courses,
+            'location' => $edu['location'] ?? '',
+            'is_current' => $edu['is_current'] ?? false
         ];
     }
     
-    // Get academic highlights
-    $stmt = $conn->prepare("SELECT * FROM academic_highlights ORDER BY created_at");
+    // Get academic highlights (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM academic_highlights ORDER BY display_order, created_at");
     $stmt->execute();
     $highlights = $stmt->fetchAll();
     
@@ -165,8 +189,8 @@ try {
         $response['academic_highlights'][] = $highlight['title'];
     }
     
-    // Get interests
-    $stmt = $conn->prepare("SELECT * FROM interests ORDER BY created_at");
+    // Get interests (updated for new structure)
+    $stmt = $conn->prepare("SELECT * FROM interests ORDER BY display_order, interest");
     $stmt->execute();
     $interests = $stmt->fetchAll();
     

@@ -16,6 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $situation = trim($_POST['situation']);
         $keywords = $_POST['keywords'] ?? [];
         $level = trim($_POST['level']);
+        $proficiency = intval($_POST['proficiency_percentage'] ?? 0);
+        $experience = intval($_POST['years_experience'] ?? 0);
+        $display_order = intval($_POST['display_order'] ?? 0);
         
         // Debug: Log the received data
         error_log("Add skill - Situation: $situation, Keywords: " . print_r($keywords, true) . ", Level: $level");
@@ -24,8 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $cleanKeywords = array_filter(array_map('trim', $keywords));
         
         try {
-            $stmt = $conn->prepare("INSERT INTO skills (situation, keywords, level) VALUES (?, ?, ?)");
-            $result = $stmt->execute([$situation, json_encode($cleanKeywords), $level]);
+            $stmt = $conn->prepare("INSERT INTO skills (situation, keywords, level, proficiency_percentage, years_experience, display_order) VALUES (?, ?, ?, ?, ?, ?)");
+            $result = $stmt->execute([$situation, json_encode($cleanKeywords), $level, $proficiency, $experience, $display_order]);
             if ($result) {
                 $success = "Skill category added successfully! Added " . count($cleanKeywords) . " keywords.";
             } else {
@@ -41,6 +44,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $situation = trim($_POST['situation']);
         $keywords = $_POST['keywords'] ?? [];
         $level = trim($_POST['level']);
+        $proficiency = intval($_POST['proficiency_percentage'] ?? 0);
+        $experience = intval($_POST['years_experience'] ?? 0);
+        $display_order = intval($_POST['display_order'] ?? 0);
+        $is_active = isset($_POST['is_active']) ? 1 : 0;
         
         // Debug: Log the received data
         error_log("Update skill ID $id - Situation: $situation, Keywords: " . print_r($keywords, true) . ", Level: $level");
@@ -49,8 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         $cleanKeywords = array_filter(array_map('trim', $keywords));
         
         try {
-            $stmt = $conn->prepare("UPDATE skills SET situation = ?, keywords = ?, level = ? WHERE id = ?");
-            $result = $stmt->execute([$situation, json_encode($cleanKeywords), $level, $id]);
+            $stmt = $conn->prepare("UPDATE skills SET situation = ?, keywords = ?, level = ?, proficiency_percentage = ?, years_experience = ?, display_order = ?, is_active = ? WHERE id = ?");
+            $result = $stmt->execute([$situation, json_encode($cleanKeywords), $level, $proficiency, $experience, $display_order, $is_active, $id]);
             if ($result) {
                 $success = "Skill category updated successfully! Now has " . count($cleanKeywords) . " keywords.";
             } else {
@@ -74,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 // Get all skills
-$stmt = $conn->prepare("SELECT * FROM skills ORDER BY created_at DESC");
+$stmt = $conn->prepare("SELECT * FROM skills ORDER BY display_order ASC, created_at DESC");
 $stmt->execute();
 $skills = $stmt->fetchAll();
 ?>
