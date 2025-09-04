@@ -16,8 +16,8 @@
     },
     "profiles": {
       "twitter":{
-        "username": "naquib_dev",
-        "url": "https://twitter.com/naquib_dev"
+        "username": "illsoul058",
+        "url": "https://x.com/illsoul058?t=co9FGbQyuuYISWl11h0YSw"
       },
       "github":{
         "url": "https://github.com/ill-soul077",
@@ -26,7 +26,13 @@
       "linkedin":{
         "username": "naquib-hassan",
         "url": "https://www.linkedin.com/in/naquib-hassan"
-      }  
+      },
+      "codeforces":{
+        "username": "ill.soul",
+        "url": "https://codeforces.com/profile/ill.soul",
+        "icon": "assets/images/codeforces.png",
+        "type": "image"
+      }
     }
   },
 
@@ -61,33 +67,9 @@
   ],
   
   "education": [
-    {
-      "institution": "Khulna University of Engineering and Technology (KUET)",
-      "area": "Computer Science & Engineering",
-      "studyType": "B.Sc.",
-      "startDate": "2023",
-      "endDate": "present",
-      "gpa": "3.72 (till present)",
-      "courses": ["Dean's Award recipient"]
-    },
-    {
-      "institution": "Notre Dame College, Dhaka",
-      "area": "Science",
-      "studyType": "Higher Secondary Certificate (HSC)",
-      "startDate": "2019",
-      "endDate": "2022",
-      "gpa": "5.00",
-      "courses": []
-    },
-    {
-      "institution": "Cox's Bazar Government High School",
-      "area": "Science",
-      "studyType": "Secondary School Certificate (SSC)",
-      "startDate": "2014",
-      "endDate": "2019",
-      "gpa": "5.00",
-      "courses": []
-    }
+    "Khulna University of Engineering and Technology (KUET)",
+    "Notre Dame College, Dhaka",
+    "Cox's Bazar Government High School"
   ],
   "academic_highlights": [
     "B.Sc. in Computer Science & Engineering",
@@ -193,20 +175,28 @@
   ],
   "work": [
     {
-      "position": "Software Developer",
-      "name": "Tech Solutions Ltd.",
-      "startDate": "2023-01",
-      "endDate": "Present",
-      "location": "Dhaka, Bangladesh",
-      "summary": "Developing web and mobile applications using modern technologies. Collaborated with cross-functional teams to deliver high-quality software solutions. Implemented automated testing and deployment processes."
+      "position": "Workshop Manager",
+      "name": "SGIPC, KUET",
+      "startDate": "2025-01",
+      "endDate": "2026-12",
+      "location": "Khulna, Bangladesh",
+      "summary": "Leading workshop organization and management activities for the Software and Game Industry Preparation Club at Khulna University of Engineering & Technology. Coordinating technical workshops, training sessions, and skill development programs for students interested in software development and game industry careers."
     },
     {
-      "position": "Junior Developer",
-      "name": "Digital Innovations Inc.",
-      "startDate": "2022-06",
-      "endDate": "2022-12",
+      "position": "Assistant Workshop Manager",
+      "name": "SGIPC, KUET",
+      "startDate": "2024-01",
+      "endDate": "2025-12",
+      "location": "Khulna, Bangladesh",
+      "summary": "Assisted in organizing technical workshops and training programs. Coordinated with industry professionals for guest lectures and hands-on sessions. Managed event logistics and student participation in competitive programming and software development workshops."
+    },
+    {
+      "position": "Secretary of Field & Voluntary Executive",
+      "name": "Notre Dame Math Club",
+      "startDate": "2020-01",
+      "endDate": "2021-12",
       "location": "Dhaka, Bangladesh",
-      "summary": "Worked on frontend development using React.js and backend APIs. Participated in code reviews and contributed to improving development processes."
+      "summary": "Managed mathematical competitions, olympiad preparations, and academic events. Coordinated volunteer activities for educational outreach programs. Organized math camps and problem-solving sessions for junior students, fostering mathematical thinking and competitive spirit."
     }
   ],
 

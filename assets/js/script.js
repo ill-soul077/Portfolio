@@ -7,75 +7,60 @@ function myFunction() {
     }
   }
 
-// Typewriter effect function
+// Single-line typewriter effect function
 function typewriterEffect() {
-    const lines = [
+    const texts = [
         "Software Developer",
         "Competitive Programmer"
     ];
     
-    const line1Element = document.getElementById("typewriter-line1");
-    const line2Element = document.getElementById("typewriter-line2");
+    const contentElement = document.getElementById("typewriter-content");
     const cursor = document.querySelector(".typewriter-cursor");
     
     // Check if elements exist
-    if (!line1Element || !line2Element || !cursor) {
+    if (!contentElement || !cursor) {
         console.log("Typewriter elements not found");
         return;
     }
     
-    let currentLineIndex = 0;
+    let currentTextIndex = 0;
     let currentChar = 0;
     let isDeleting = false;
-    let typeSpeed = 80; // Faster typing speed
-    let deleteSpeed = 40; // Faster deleting speed
-    let pauseAfterTyping = 800; // Shorter pause after typing complete word
-    let pauseBeforeDeleting = 200; // Very short pause before starting to delete
-    let pauseAfterDeleting = 300; // Short pause after deleting
+    let typeSpeed = 100; // Typing speed
+    let deleteSpeed = 50; // Deleting speed
+    let pauseAfterTyping = 2000; // Pause after typing complete word
+    let pauseAfterDeleting = 500; // Pause after deleting before next word
     
     function type() {
-        const currentText = lines[currentLineIndex];
-        const displayElement = line1Element; // Always use first line for typing/deleting
+        const currentText = texts[currentTextIndex];
         
         if (isDeleting) {
             // Deleting characters
-            displayElement.textContent = currentText.substring(0, currentChar);
+            contentElement.textContent = currentText.substring(0, currentChar);
             currentChar--;
             
             if (currentChar < 0) {
-                // Finished deleting, move to next line
+                // Finished deleting, move to next text
                 isDeleting = false;
-                currentLineIndex++;
+                currentTextIndex = (currentTextIndex + 1) % texts.length; // Cycle through texts
                 currentChar = 0;
                 
-                if (currentLineIndex < lines.length) {
-                    // Start typing next line after short pause
-                    setTimeout(type, pauseAfterDeleting);
-                } else {
-                    // All lines processed, show final result
-                    showFinalResult();
-                }
+                // Start typing next text after pause
+                setTimeout(type, pauseAfterDeleting);
                 return;
             }
         } else {
             // Typing characters
-            displayElement.textContent = currentText.substring(0, currentChar + 1);
+            contentElement.textContent = currentText.substring(0, currentChar + 1);
             currentChar++;
             
             if (currentChar === currentText.length) {
-                // Finished typing current line
-                if (currentLineIndex === lines.length - 1) {
-                    // Last line typed, show final result after pause
-                    setTimeout(showFinalResult, pauseAfterTyping);
-                    return;
-                } else {
-                    // Start deleting after pause
-                    setTimeout(() => {
-                        isDeleting = true;
-                        setTimeout(type, pauseBeforeDeleting);
-                    }, pauseAfterTyping);
-                    return;
-                }
+                // Finished typing current text, start deleting after pause
+                setTimeout(() => {
+                    isDeleting = true;
+                    setTimeout(type, 100); // Small delay before starting to delete
+                }, pauseAfterTyping);
+                return;
             }
         }
         
@@ -83,20 +68,12 @@ function typewriterEffect() {
         setTimeout(type, isDeleting ? deleteSpeed : typeSpeed);
     }
     
-    function showFinalResult() {
-        // Clear the typing line and show both lines
-        line1Element.textContent = lines[0];
-        line2Element.textContent = lines[1];
-        
-        // Keep cursor visible and blinking
-        cursor.style.display = 'inline';
-    }
-    
     // Start typing effect
     console.log("Starting typewriter effect");
-    // Clear both lines initially
-    line1Element.textContent = "";
-    line2Element.textContent = "";
+    contentElement.textContent = "";
+    cursor.style.display = 'inline';
+    
+    // Start the animation
     type();
 }
 
@@ -181,6 +158,63 @@ else if(sayac==4){
 
 let skillsHtml=document.getElementsByClassName("skillsHtml")[0];
 
+// Dynamic profile creation function
+function createDynamicProfiles(profiles) {
+    const container = document.getElementById('dynamic-profiles-container');
+    if (!container) return;
+    
+    // Clear existing dynamic profiles
+    container.innerHTML = '';
+    
+    // Define profiles to create dynamically
+    const dynamicProfiles = ['codeforces'];
+    
+    dynamicProfiles.forEach(profileKey => {
+        if (profiles[profileKey]) {
+            const profile = profiles[profileKey];
+            
+            // Create the profile div
+            const profileDiv = document.createElement('div');
+            profileDiv.className = 'adiv';
+            
+            // Create icon container
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'idiv';
+            iconDiv.style.cssText = 'width: 60px; display: flex; justify-content: center; align-items: center;';
+            
+            // Create icon (image or font awesome)
+            if (profile.type === 'image' && profile.icon) {
+                const img = document.createElement('img');
+                img.height = 20;
+                img.style.cssText = 'height: 20px; width: auto; object-fit: contain;';
+                img.alt = profileKey.charAt(0).toUpperCase() + profileKey.slice(1);
+                img.title = profileKey.charAt(0).toUpperCase() + profileKey.slice(1);
+                img.src = profile.icon;
+                iconDiv.appendChild(img);
+            } else {
+                // Fallback to icon class or default
+                const icon = document.createElement('i');
+                icon.className = profile.iconClass || 'fas fa-link';
+                iconDiv.appendChild(icon);
+            }
+            
+            // Create link
+            const link = document.createElement('a');
+            link.href = profile.url;
+            link.target = '_blank';
+            link.textContent = profile.username;
+            link.id = profileKey + 'Html';
+            
+            // Append to profile div
+            profileDiv.appendChild(iconDiv);
+            profileDiv.appendChild(link);
+            
+            // Append to container
+            container.appendChild(profileDiv);
+        }
+    });
+}
+
 let worksHtml=document.getElementsByClassName("worksHtml")[0];
 let educationHtml=document.getElementsByClassName("educationHtml")[0];
 let interestsHtml=document.getElementsByClassName("interestsHtml")[0];
@@ -220,7 +254,7 @@ const data=fetch(resume)
     
     // Use typewriter effect instead of setting label directly
     // document.getElementById("label").innerHTML = user.label;
-    initTypewriter(); // Start typewriter effect
+    // initTypewriter(); // Disabled - using inline typewriter instead
 
     document.getElementById("location").innerHTML = user.location.city+", "+user.location.countryCode;
     document.getElementById("email").innerHTML = user.email;
@@ -234,7 +268,8 @@ const data=fetch(resume)
     document.getElementById("githubHtml").innerHTML=""+user.profiles.github.username;
     document.getElementById("twitterHtml").innerHTML="@"+user.profiles.twitter.username;
 
-
+    // Dynamically create additional social profiles
+    createDynamicProfiles(user.profiles);
 
    
 
@@ -376,7 +411,7 @@ function loadPortfolioData(resume) {
         if (user.name) document.getElementById("home").innerHTML = user.name;
         // Use typewriter effect instead of setting label directly
         // if (user.label) document.getElementById("label").innerHTML = user.label;
-        initTypewriter(); // Start typewriter effect
+        // initTypewriter(); // Disabled - using inline typewriter instead
         if (user.location) {
             document.getElementById("location").innerHTML = user.location.city + ", " + user.location.countryCode;
         }
@@ -399,6 +434,9 @@ function loadPortfolioData(resume) {
                 document.getElementById("linkedinHtml").href = user.profiles.linkedin.url;
                 document.getElementById("linkedinHtml").innerHTML = "HASSAN";
             }
+            
+            // Create dynamic profiles
+            createDynamicProfiles(user.profiles);
         }
     }
     

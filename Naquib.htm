@@ -44,7 +44,7 @@
           <a href="#about">About</a>
           <a href="#skills">Skills</a>
           <a href="#repository">Repository</a>
-          <a href="#works">Works Experience</a>
+          <a href="#works">Co-curricular Activities</a>
           <a href="#education">Education</a>
           <a href="#contact">Contact</a>
           <a href="#game">Game</a>
@@ -71,12 +71,80 @@
 
       <div class="profilediv">
       <img id="myImg"  src="assets/images/ILLSOUL.jpg" alt="avatar">
-      <h1 id="name" >name</h1>
-      <h2 id="label" class="typewriter-text">
-        <span id="typewriter-line1"></span>
-        <span id="typewriter-line2"></span>
-        <span class="typewriter-cursor">|</span>
+      <h1 id="name" >Hassan Naquib</h1>
+      <h2 id="label" class="typewriter-text" style="display:inline-flex;align-items:center;font-size:1.5em;line-height:1.2em;height:1.2em;margin:0;padding:0;white-space:nowrap;overflow:hidden;vertical-align:middle;font-weight:600;letter-spacing:0.5px;text-shadow:0 0 10px rgba(236,179,101,0.3);">
+        <span id="typewriter-content" style="color:#ECB365;transition:all 0.1s ease;">Software Developer</span>
+        <span class="typewriter-cursor" style="color:#ECB365;font-weight:bold;margin-left:3px;animation:blink 1s infinite;text-shadow:0 0 8px rgba(236,179,101,0.6);">|</span>
       </h2>
+      
+      <script>
+      // Enhanced typewriter with smooth animations
+      function startSimpleTypewriter() {
+          const element = document.getElementById('typewriter-content');
+          const cursor = document.querySelector('.typewriter-cursor');
+          if (!element) return;
+          
+          const roles = ['Software Developer', 'Competitive Programmer'];
+          let currentRole = 0;
+          let currentChar = 0;
+          let isDeleting = false;
+          
+          // Add subtle fade effect during typing
+          function addTypeEffect() {
+              element.style.opacity = '0.8';
+              setTimeout(() => element.style.opacity = '1', 50);
+          }
+          
+          function typeStep() {
+              const fullText = roles[currentRole];
+              
+              if (!isDeleting) {
+                  // Typing with enhanced effect
+                  const currentText = roles[currentRole];
+                  element.style.opacity = "0.9";
+                  element.textContent = currentText.slice(0, currentChar);
+                  currentChar++;
+                  
+                  if (currentChar > currentText.length) {
+                      // Finished typing, wait then start deleting
+                      isDeleting = true;
+                      element.style.opacity = "1";
+                      cursor.style.animationDuration = "1s";
+                      setTimeout(typeStep, 2000);
+                      return;
+                  }
+                  
+                  setTimeout(typeStep, 80 + Math.random() * 40); // Variable typing speed
+              } else {
+                  // Deleting with enhanced effect
+                  const currentText = roles[currentRole];
+                  element.style.opacity = "0.8";
+                  element.textContent = currentText.slice(0, currentChar);
+                  currentChar--;
+                  
+                  if (currentChar === 0) {
+                      // Finished deleting, move to next role
+                      isDeleting = false;
+                      currentRole = (currentRole + 1) % roles.length;
+                      element.style.opacity = "1";
+                      setTimeout(typeStep, 600);
+                      return;
+                  }
+                  
+                  setTimeout(typeStep, 50);
+              }
+          }
+          
+          // Clear and start
+          element.textContent = '';
+          currentChar = 0;
+          setTimeout(typeStep, 1000);
+      }
+      
+      // Start immediately when this script runs
+      startSimpleTypewriter();
+      </script>
+      
       </div>
 
       <hr>
@@ -88,7 +156,7 @@
           <div class="idiv"><i class="fa-solid fa-location-dot"></i></div><span id="location">location</span>
         </div>
         <div class="adiv">
-          <div class="idiv"><i class="fa-solid fa-envelope"></i></div><a id="email" href="">email</a>
+          <div class="idiv"><i class="fa-solid fa-envelope"></i></div><a id="email" href="mailto:hassannaquib014@gmail.com">hassannaquib014@gmail.com</a>
         </div>
       
       </div>
@@ -104,9 +172,31 @@
         </div>
         <div class="adiv">
           <div class="idiv"><i class="fa-brands fa-twitter"></i></div><a id="twitterHtml" href="" target="_blank"></a>
+        </div>
+        <div class="adiv">
+          <div class="idiv" style="width: 50px; text-align: center;">
+            <img src="assets/images/codeforces.png" alt="CF" style="height: 20px; width: auto; max-width: 45px;" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+            <span style="display: none; background: #ff6b35; color: white; padding: 2px 4px; border-radius: 3px; font-size: 10px; font-weight: bold;">CF</span>
+          </div>
+          <a href="https://codeforces.com/profile/ill.soul" target="_blank" style="color: #ECB365; text-decoration: none; transition: color 0.3s ease;" onmouseover="this.style.color='#ffa500'" onmouseout="this.style.color='#ECB365'">ill.soul</a>
+        </div>
           </div>
           
       </div>
+
+      <script>
+      // Simple inline approach - set Codeforces link theme colors
+      document.addEventListener('DOMContentLoaded', function() {
+          setTimeout(function() {
+              const cfLink = document.querySelector('a[href*="codeforces.com"]');
+              if (cfLink) {
+                  cfLink.style.color = '#ECB365';
+                  cfLink.style.textDecoration = 'none';
+                  cfLink.style.transition = 'color 0.3s ease';
+              }
+          }, 100);
+      });
+      </script>
 
 
       
@@ -172,7 +262,7 @@
         
         <div class="chapter c5" id="works">
 
-          <h2>Works Experience</h2>
+          <h2>Co-curricular Activities</h2>
 
           <p class="worksHtml"></p>
         

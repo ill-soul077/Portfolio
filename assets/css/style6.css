@@ -141,47 +141,62 @@ p{
  }
 
  #label{
-    margin: 2px;
-    font-size: 1.7em;
-    text-align: left;
-    color: #ECB365;
-    min-height: 3.4em; /* Reserve space for two lines */
+  display: inline-flex !important;
+  align-items: center !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1.5em !important;
+  color: #ECB365 !important;
+  height: 1em !important;
+  min-height: 1em !important;
+  max-height: 1em !important;
+  line-height: 1em !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  border: none !important;
     
  }
 
  /* Typewriter effect styles */
  .typewriter-text {
-   position: relative;
-   display: block;
-   height: auto;
+  display: flex !important;
+  align-items: center !important;
+  position: relative;
+  height: 1em !important;
+  min-height: 1em !important;
+  max-height: 1em !important;
+  line-height: 1em !important;
+  overflow: hidden !important;
+  white-space: nowrap !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  vertical-align: middle !important;
  }
 
- #typewriter-line1,
- #typewriter-line2 {
-   display: block;
-   line-height: 1.4;
+ #typewriter-content {
+   display: inline;
    color: #ECB365;
    font-size: inherit;
-   min-height: 1.4em; /* Reserve space even when empty */
-   transition: none; /* Remove any CSS transitions that might interfere */
- }
-
- #typewriter-line2 {
-   margin-top: 6px;
+   transition: all 0.1s ease; /* Smooth transitions for typing */
+   white-space: nowrap; /* Prevent text wrapping */
+   text-shadow: 0 0 10px rgba(236, 179, 101, 0.2); /* Subtle glow */
  }
 
  .typewriter-cursor {
    color: #ECB365;
    font-weight: bold;
-   animation: blink 0.8s infinite;
+   animation: blink 1s infinite;
    display: inline;
-   margin-left: 2px;
+   margin-left: 3px;
    font-size: 1em;
+   text-shadow: 0 0 8px rgba(236, 179, 101, 0.6); /* Glowing cursor */
  }
 
  @keyframes blink {
-   0%, 60% { opacity: 1; }
-   61%, 100% { opacity: 0; }
+   0%, 50% { opacity: 1; }
+   51%, 100% { opacity: 0; }
+ }
  }
 
  hr {
